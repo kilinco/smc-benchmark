@@ -17,11 +17,11 @@ void toOblivFloat(protocolIO *io, obliv float *oa, float *a, int party){
 // FEED INT
 // This function returns an obliv-qualified type from the specified party to both parties. 
 // obliv int feedOblivInt(int v, int party)
-void toOblivInt(protocolIO *io, obliv int *oa, int *a, int party){
-	printf("Party %d called toOblivInt\n", party);
-	printf("Party %d of size %d\n", party, io->n);
 
-	for(int i = 0; i < io->n; i++) {
+void toOblivInt(int size, obliv int *oa, int *a, int party){
+	printf("Party %d called toOblivInt\n", party);
+	printf("Party %d of size %d\n", party, size);
+	for(int i = 0; i < size; i++) {
 		printf("Obliviating element %d\n", i);
 		oa[i] = feedOblivInt(a[i], party);
 	}
@@ -30,26 +30,54 @@ void toOblivInt(protocolIO *io, obliv int *oa, int *a, int party){
 
 void revealClientArr(protocolIO *io, obliv int *oa, int party){
 	printf("Party %d of size %d\n", party, io->n);
-	io->arr =  malloc(sizeof(int) * io->n);
 	for(int i = 0; i < io->n; i++){
 		revealOblivInt(&(io->arr[i]), oa[i], 0);
 		printf("Party %d Element %d revealed as %d\n", party, i, io->arr[i]);
 	}
 }
 
+void swapInt(obliv int* a,obliv int* b) obliv
+{
+  ~obliv(en) {
+    obliv int t = 0;
+    obliv if(en) t=*a^*b;
+    *a^=t;
+    *b^=t;
+  }
+}
+
+void cmpswapInt(void* va,void* vb)
+{
+  obliv int *a=va,*b=vb;
+  obliv if(*a>*b) swapInt(a,b);
+}
 
 // Array sizes has to be equal!!!
-void bubblesort_algo(protocolIO *io, obliv int *ox, obliv int *oy){
+void bubblesort_algo(protocolIO *io, obliv int *out){
 	for(int i = 0; i < io->n; i++) {
-		for(int j = 0; j < io->n-i-1; j++){
+		for(int j = 0; j < io->n; j++){
+			cmpswapInt(out+j, out+i);
 		}
 	}
 	printf("Arrays sorted!");
 	printf("Client data revealing...\n");
-	revealClientArr(io, ox, 1);
-	revealClientArr(io, oy, 2);
+	revealClientArr(io, out, 1);
+	revealClientArr(io, out, 2);
 	printf("Client Data Revealed!\n");
 }
+
+void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, int party){
+	printf("Party %d entered Concatenate!\n", party);
+	for(int i = 0; i < io->n; i++){
+		*(*out + i) = ox[i];
+	}
+	for(int i = 0; i < io->n; i++){
+		*(*out + io->n + i) = oy[i];
+	}
+}
+
+
+
 
 
 // TODO Concatenate the two oblivious arrays
@@ -58,27 +86,38 @@ void bubblesort_algo(protocolIO *io, obliv int *ox, obliv int *oy){
 // 3- What results should be revealed? 
 // 4- How many nodes are there?
 // 5- What are the sizes of the arrays? Are array sizes public?
-// 6- Do we assume that node arrays are already sorted?
+// 6- Do we assume that node arrays are already sorted?s
 void bubblesort(void* args) {
 	protocolIO *io = (protocolIO*) args;
+
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
 	load_dummy(io, &x, &y, ocCurrentParty());
-	
+	// printf("Party %d io->n1=%d io->n2=%d\n", ocCurrentParty(), io->n1, io->n2);
+
 	printf("Dummy Loaded!\n");
 	obliv int *ox = malloc(sizeof(obliv int) * io->n);
 	obliv int *oy = malloc(sizeof(obliv int) * io->n);
 	printf("Obliv Data Allocated!\n");
 
-	toOblivInt(io, ox, x, 1); 
-	toOblivInt(io, oy, y, 2); 
+	toOblivInt(io->n, ox, x, 1); 
+	toOblivInt(io->n, oy, y, 2); 
 	free(x);
 	free(y);
 	printf("Non-obliv Data Freed!\n");
-
-	bubblesort_algo(io, ox, oy);
+	
+	// CONCATENATE -- DOES NOT HAVE TO BE THIS WAY 
+	// concatenation can be done during sorting
+	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);
+	concatenate(io, ox, oy, &out, ocCurrentParty()); 
 	free(ox);
 	free(oy);
+	
+	// io->n CHANGED (=8)
+	io->n =  io->n * 2;
+	io->arr = malloc(sizeof(int) * io->n);
+	bubblesort_algo(io, out);
+	free(out);
 	printf("Obliv Data Freed!\n");
 }
 

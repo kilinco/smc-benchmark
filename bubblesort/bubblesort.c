@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 		setCurrentParty(&pd, cp); // only checks for a '1'
 		// io.src = argv[3]; // filename
 		lap = wallClock();
+		io.n = 0;
 
 		// Execute Yao's protocol and cleanup
 		execYaoProtocol(&pd, bubblesort, &io);
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
 		log_info("Total time: %lf seconds\n", runtime);
 		// log_info("Yao Gate Count: %u\n", yaoGateCount());
 		printf("\n");
-		for(int i = 0; i < io.n; i++){
+		for(int i = 0; i < 8; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
@@ -91,33 +92,23 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 		}
 	}
 
-	io->n = 0;
 	int memsize = ALLOC;
 	int a;
-
 	for(int i = 0; i < dummy_size; i++){
 		a = dummy[i];
-		// Increment the array size
-		io->n += 1;
-		if (io->n > memsize){
-			memsize *= 2;
-			*x = realloc(*x, sizeof(int) * memsize);
-			*y = realloc(*y, sizeof(int) * memsize);
-		}
-		
 		// Assign the value to the corresponding party
 		if (party == 1) {
+			io->n += 1;
 			*(*x + io->n - 1) =  a;
 		}
-
 		else if (party == 2) {
+			io->n += 1;
 			*(*y + io->n - 1) =  a;
 		}
 		printf("Party %d element %d = %d\n", party, i, a);
 	}
 	free(dummy);
 }
-
 // void load_data_int(protocolIO *io, int* x, int *y, int party) 
 // {
 // 	FILE *inputFile = fopen(io->src, "r");
@@ -278,3 +269,133 @@ void cmpswapInt(void* va,void* vb,void* arg)
 // 	delete [] visited;
 // 	return temp_cost;
 // }
+
+
+// void swapInt(obliv int* a,obliv int* b,int *i) obliv
+// {
+//   ~obliv(en) {
+// 	obliv int t = 0;
+// 	obliv if(en) t=*a^*b;
+// 	*a^=t;
+// 	*b^=t;
+// 	*i++;
+//   }
+// }
+
+// void cmpswapInt(void* va,void* vb, void* i, void* j)
+// {
+//   obliv int *a=va,*b=vb;
+//   obliv if(*a>*b) swapInt(a,b,i);
+//   else {~obliv(en){*j++;}}
+// }
+
+// // Array sizes has to be equal!!!
+// void bubblesort_algo(protocolIO *io, obliv int *out){
+// 	for(int i = 0; i < io->n; i++) {
+// 		for(int j = 0; j < io->n; j++){
+// 			//cmpswapInt(out+j, out+i);
+// 		}
+// 	}
+// 	printf("Arrays sorted!");
+// 	printf("Client data revealing...\n");
+// 	revealClientArr(io, out, 1);
+// 	revealClientArr(io, out, 2);
+// 	printf("Client Data Revealed!\n");
+// }
+
+// void batcherSwap(int* data, int n, void (*cmpswap)(void*,void*))
+// {
+// 	for(int i=0; i+1 < n; i+=2) 
+// 		cmpswap(data+i, data+i+1);
+// }
+
+// void batcherMerge(int* data, int n1, int n2, void (*cmpswap)(void*,void*))
+// {
+// 	if(n1 + n2 <= 1){
+// 		return;
+// 		printf("batcherMerge returned!\n");
+// 	}
+
+// 	int odd = n1 % 2;
+// 	printf("batcherMerge Entered! n1 = %d, n2 = %d, odd = %d, !odd = %d\n", n1, n2, odd, !odd);
+
+// 	batcherMerge(data,(n1+1)/2, (n2 + !odd) / 2, cmpswap); // MERGE
+// 	batcherMerge(data, n1/2,  (n2 + odd) / 2, cmpswap);	// MERGE
+// 	batcherSwap(data, n1 + n2 - !odd, cmpswap); // COMP
+// }
+
+// void batcherSort(int* data, int n, void (*cmpswap)(void*,void*)){
+// 	if(n<=1){
+// 		printf("batcherSort returned!\n");
+// 		return;
+// 	}
+// 	batcherSort(data, n/2, cmpswap); // SORT
+// 	batcherSort(data + n/2, (n+1)/2, cmpswap); // SORT
+// 	batcherMerge(data, n/2, (n+1)/2, cmpswap); // MERGE
+// }
+
+// void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, int party){
+// 	printf("Party %d entered Concatenate!\n", party);
+// 	for(int i = 0; i < io->n; i++){
+// 		*(*out + i) = ox[i];
+// 	}
+// 	for(int i = 0; i < io->n; i++){
+// 		*(*out + io->n + i) = oy[i];
+// 	}
+// }
+
+
+// void merge(obliv int *arr, int l, int m, int r) 
+// { 
+//     int i, j, k; 
+//     int n1 = m - l + 1; 
+//     int n2 =  r - m; 
+  
+//     obliv int *L=malloc(sizeof(obliv int)*n1);
+//     obliv int *R=malloc(sizeof(obliv int)*n2);
+  
+//     for (i = 0; i < n1; i++) 
+//         L[i] = arr[l + i]; 
+//     for (j = 0; j < n2; j++) 
+//         R[j] = arr[m + 1+ j]; 
+  
+//     i = 0; // Initial index of first subarray 
+//     j = 0; // Initial index of second subarray 
+//     k = l; // Initial index of merged subarray 
+    
+//     while (i < n1 && j < n2){ 
+//    		cmpswapInt(L+i, R+j, &i, &j);
+// 		k++;
+//     } 
+  
+//     while (i < n1) 
+//     { 
+//         arr[k] = L[i]; 
+//         i++; 
+//         k++; 
+//     } 
+
+//     while (j < n2) 
+//     { 
+//         arr[k] = R[j]; 
+//         j++; 
+//         k++; 
+//     } 
+//     free(L);
+//     free(R);
+// } 
+ 
+// void mergeSort(int *arr, int l, int r) 
+// { 
+//     if (l < r) 
+//     { 
+//         int m = l+(r-l)/2; 
+  
+//         mergeSort(arr, l, m); 
+//         mergeSort(arr, m+1, r); 
+  
+//         merge(arr, l, m, r); 
+//     } 
+// } 
+
+

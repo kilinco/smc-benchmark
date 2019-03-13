@@ -11,6 +11,8 @@ typedef struct {
     int client_id;
     int  *arr; // array
     int n; // number of data points
+    // int n1;
+    // int n2;
 } protocolIO;
 
 // TODO - Implement Heaps
@@ -36,4 +38,10 @@ typedef struct {
 double wallClock();
 void bubblesort(void* args);
 void load_dummy(protocolIO *io, int **x, int **y, int party);
+// void batcherSort(int* data, int n, void (*cmpswap)(void*,void*));
+// void batcherMerge(int* data, int n1, int n2, void (*cmpswap)(void*,void*));
+// void batcherSwap(int* data, int n, void (*cmpswap)(void*,void*));
+// void cmpswapInt(void* va,void* vb);
+
+
 // void load_data_int(protocolIO *io, float* x, float* y, int party);

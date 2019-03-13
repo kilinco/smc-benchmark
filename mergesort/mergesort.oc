@@ -17,7 +17,6 @@ void toOblivFloat(protocolIO *io, obliv float *oa, float *a, int party){
 // FEED INT
 // This function returns an obliv-qualified type from the specified party to both parties. 
 // obliv int feedOblivInt(int v, int party)
-
 void toOblivInt(int size, obliv int *oa, int *a, int party){
 	printf("Party %d called toOblivInt\n", party);
 	printf("Party %d of size %d\n", party, size);
@@ -52,18 +51,12 @@ void cmpswapInt(void* va,void* vb)
   obliv if(*a>*b) swapInt(a,b);
 }
 
-// Array sizes has to be equal!!!
-void bubblesort_algo(protocolIO *io, obliv int *out){
+void mergesort_algo(protocolIO *io, obliv int *out){
 	for(int i = 0; i < io->n; i++) {
 		for(int j = 0; j < io->n; j++){
 			cmpswapInt(out+j, out+i);
 		}
 	}
-	printf("Arrays sorted!");
-	printf("Client data revealing...\n");
-	revealClientArr(io, out, 1);
-	revealClientArr(io, out, 2);
-	printf("Client Data Revealed!\n");
 }
 
 void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, int party){
@@ -76,21 +69,12 @@ void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, 
 	}
 }
 
-
-// TODO Concatenate the two oblivious arrays
-// 1- What are the security assumptions?
-// 2- What knowledge is public? What knowledge is secret? 
-// 3- What results should be revealed? 
-// 4- How many nodes are there?
-// 5- What are the sizes of the arrays? Are array sizes public?
-// 6- Do we assume that node arrays are already sorted?
-void bubblesort(void* args) {
+void mergesort(void* args) {
 	protocolIO *io = (protocolIO*) args;
 
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
 	load_dummy(io, &x, &y, ocCurrentParty());
-	// printf("Party %d io->n1=%d io->n2=%d\n", ocCurrentParty(), io->n1, io->n2);
 
 	printf("Dummy Loaded!\n");
 	obliv int *ox = malloc(sizeof(obliv int) * io->n);
@@ -113,7 +97,14 @@ void bubblesort(void* args) {
 	// io->n CHANGED (=8)
 	io->n =  io->n * 2;
 	io->arr = malloc(sizeof(int) * io->n);
-	bubblesort_algo(io, out);
+	mergesort_algo(io, out);
+
+	printf("Arrays sorted!");
+	printf("Client data revealing...\n");
+	revealClientArr(io, out, 1);
+	revealClientArr(io, out, 2);
+	printf("Client Data Revealed!\n");
+
 	free(out);
 	printf("Obliv Data Freed!\n");
 }

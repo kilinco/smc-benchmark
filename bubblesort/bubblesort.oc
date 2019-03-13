@@ -28,18 +28,18 @@ void toOblivInt(protocolIO *io, obliv int *oa, int *a, int party){
 	printf("Exiting toOblivInt\n");
 }
 
-void revealClientArr(protocolIO *io, obliv int oa, int party){
+void revealClientArr(protocolIO *io, obliv int *oa, int party){
 	printf("Party %d of size %d\n", party, io->n);
 	io->arr =  malloc(sizeof(int) * io->n);
 	for(int i = 0; i < io->n; i++){
-		printf("Element %d revealed\n", i);
-		revealOblivInt(&(io->arr[i]), oa, party);
+		revealOblivInt(&(io->arr[i]), oa[i], 0);
+		printf("Party %d Element %d revealed as %d\n", party, i, io->arr[i]);
 	}
 }
 
 
 // Array sizes has to be equal!!!
-void bubblesort_algo(protocolIO *io, obliv int ox, obliv int oy){
+void bubblesort_algo(protocolIO *io, obliv int *ox, obliv int *oy){
 	for(int i = 0; i < io->n; i++) {
 		for(int j = 0; j < io->n-i-1; j++){
 		}

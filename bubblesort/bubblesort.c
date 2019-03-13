@@ -6,7 +6,8 @@
 #include <assert.h>
 #include "dbg.h"
 #include<time.h>
-#include "../common/util.h"
+
+#include "../../common/util.h"
 
 #include "bubblesort.h"
 

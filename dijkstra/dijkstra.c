@@ -119,14 +119,14 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 		// Assign the value to the corresponding party
 		if (party == 1) {
 			io->n += 1;
-			*(*x + io->n - 1) =  dummy[i%n_nodes][i/n_nodes];
+			*(*x + io->n - 1) =  dummy[i/n_nodes][i%n_nodes];
 		}
 		else if (party == 2) {
 			io->n += 1;
-			*(*y + io->n - 1) = dummy[i%n_nodes][i/n_nodes];
+			*(*y + io->n - 1) = dummy[i/n_nodes][i%n_nodes];
 		}
-		printf("Party %d element [%d][%d] = %d\n", party, i%n_nodes, i/n_nodes, 
-			dummy[i%n_nodes][i/n_nodes]);
+		printf("Party %d element [%d][%d] = %d\n", party, i/n_nodes, i%n_nodes, 
+			dummy[i/n_nodes][i%n_nodes]);
 	}
 	for(int i=0; i < n_nodes; i++){
 		free(dummy[i]);

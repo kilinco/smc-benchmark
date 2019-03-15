@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <obliv.oh>
 
-#include "mergesort.h"
+#include "dijkstra.h"
 #include "dbg.h"
 
 // FEED FLOAT

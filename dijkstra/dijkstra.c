@@ -9,7 +9,7 @@
 
 #include "../../common/util.h"
 
-#include "mergesort.h"
+#include "dijkstra.h"
 
 
 int main(int argc, char *argv[]) 
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 		io.n = 0;
 
 		// Execute Yao's protocol and cleanup
-		execYaoProtocol(&pd, mergesort, &io);
+		execYaoProtocol(&pd, dijkstra, &io);
 		cleanupProtocol(&pd);
 		double runtime = wallClock() - lap; // stop clock here 
 
@@ -103,6 +103,7 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 	}
 	free(dummy);
 }
+
 // void load_data_int(protocolIO *io, int* x, int *y, int party) 
 // {
 // 	FILE *inputFile = fopen(io->src, "r");
@@ -212,82 +213,3 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 // 	delete [] visited;
 // 	return temp_cost;
 // }
-
-
-// void swapInt(obliv int* a,obliv int* b,int *i) obliv
-// {
-//   ~obliv(en) {
-// 	obliv int t = 0;
-// 	obliv if(en) t=*a^*b;
-// 	*a^=t;
-// 	*b^=t;
-// 	*i++;
-//   }
-// }
-
-// void cmpswapInt(void* va,void* vb, void* i, void* j)
-// {
-//   obliv int *a=va,*b=vb;
-//   obliv if(*a>*b) swapInt(a,b,i);
-//   else {~obliv(en){*j++;}}
-// }
-
-// // Array sizes has to be equal!!!
-// void bubblesort_algo(protocolIO *io, obliv int *out){
-// 	for(int i = 0; i < io->n; i++) {
-// 		for(int j = 0; j < io->n; j++){
-// 			//cmpswapInt(out+j, out+i);
-// 		}
-// 	}
-// 	printf("Arrays sorted!");
-// 	printf("Client data revealing...\n");
-// 	revealClientArr(io, out, 1);
-// 	revealClientArr(io, out, 2);
-// 	printf("Client Data Revealed!\n");
-// }
-
-// void batcherSwap(int* data, int n, void (*cmpswap)(void*,void*))
-// {
-// 	for(int i=0; i+1 < n; i+=2) 
-// 		cmpswap(data+i, data+i+1);
-// }
-
-// void batcherMerge(int* data, int n1, int n2, void (*cmpswap)(void*,void*))
-// {
-// 	if(n1 + n2 <= 1){
-// 		return;
-// 		printf("batcherMerge returned!\n");
-// 	}
-
-// 	int odd = n1 % 2;
-// 	printf("batcherMerge Entered! n1 = %d, n2 = %d, odd = %d, !odd = %d\n", n1, n2, odd, !odd);
-
-// 	batcherMerge(data,(n1+1)/2, (n2 + !odd) / 2, cmpswap); // MERGE
-// 	batcherMerge(data, n1/2,  (n2 + odd) / 2, cmpswap);	// MERGE
-// 	batcherSwap(data, n1 + n2 - !odd, cmpswap); // COMP
-// }
-
-// void batcherSort(int* data, int n, void (*cmpswap)(void*,void*)){
-// 	if(n<=1){
-// 		printf("batcherSort returned!\n");
-// 		return;
-// 	}
-// 	batcherSort(data, n/2, cmpswap); // SORT
-// 	batcherSort(data + n/2, (n+1)/2, cmpswap); // SORT
-// 	batcherMerge(data, n/2, (n+1)/2, cmpswap); // MERGE
-// }
-
-// void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, int party){
-// 	printf("Party %d entered Concatenate!\n", party);
-// 	for(int i = 0; i < io->n; i++){
-// 		*(*out + i) = ox[i];
-// 	}
-// 	for(int i = 0; i < io->n; i++){
-// 		*(*out + io->n + i) = oy[i];
-// 	}
-// }
-
-
-
-
-

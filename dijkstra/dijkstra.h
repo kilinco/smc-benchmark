@@ -9,10 +9,9 @@ int cp;
 typedef struct {
     // char *src; // filename for data read
     int client_id;
-    int  *arr; // array
-    int n; // number of data points
-    // int n1;
-    // int n2;
+    int *arr; 
+    int n; // number of nodes
+
 } protocolIO;
 
 // TODO - Implement Heaps
@@ -27,14 +26,14 @@ typedef struct {
 // 	Heap(int m){heap_size = 0; Data = new int[m];}
 	
 // 	void heap_increase_key(int, int);
-//     void insert(int);
-//     int  extractmaximum();
+//  void insert(int);
+//  int  extractmaximum();
 // 	int  Maximum(){return Data[0];}
-//    	int get_data(int index) { return Data[index]; }
+//  int get_data(int index) { return Data[index]; }
 // 	void set_heap_size(int size){ heap_size = size; }
 // 	int get_heap_size(){ return heap_size; }
 // };
 
 double wallClock();
-void mergesort(void* args);
+void dijkstra(void* args);
 void load_dummy(protocolIO *io, int **x, int **y, int party);

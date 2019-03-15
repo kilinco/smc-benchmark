@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[]) 
 {
-	printf("Merge Sort\n");
+	printf("Dijkstra\n");
 	printf("=================\n\n");
 	// Check args
 	if (argc == 3) {
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 		log_info("Total time: %lf seconds\n", runtime);
 		// log_info("Yao Gate Count: %u\n", yaoGateCount());
 		printf("\n");
-		for(int i = 0; i < 8; i++){
+		for(int i = 0; i < 36; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
@@ -71,38 +71,69 @@ int main(int argc, char *argv[])
 
 void load_dummy(protocolIO *io, int **x, int **y, int party){
 	printf("Dummy Loading...\n");
-	int *dummy;
-	int dummy_size;
-	dummy_size = 4;
-	dummy = malloc(sizeof(int) * dummy_size); 
+	int n_nodes = 6;
+	int **dummy = (int **)malloc(n_nodes * sizeof(int *)); 
 	if(party == 1){
-		int arr[] = {1,13,25,6}; //4,7,8,9,0,3
-		for(int i=0; i < dummy_size; i++){			
-				dummy[i]=arr[i];
+		printf("Party 1 Dummy Loader - Creating Array\n");
+		int arr[6][6] = { 
+			{0,3,4,0,0,0},
+			{3,0,2,0,0,3},
+			{4,2,0,0,1,0},
+			{0,0,0,0,1,2},
+			{0,0,1,1,0,0},
+			{0,3,0,2,0,0}
+		};
+		printf("Party 1 Dummy Loader - Array Created\n");
+		for(int i=0; i < n_nodes; i++){
+			printf("Party 1 Dummy Loader - Allocating Memory for Row\n");
+			dummy[i] = (int *)malloc(sizeof(int) * n_nodes); 
+			for(int j=0; j < n_nodes; j++){
+				printf("Assigning element[%d][%d]\n", i, j);
+				dummy[i][j]=arr[i][j];
+			}
 		}
 	}
 	else if (party == 2){
-		int arr[] = {2,48,12,10};
-		for(int i=0; i < dummy_size; i++){			
-				dummy[i]=arr[i];
+		printf("Party 2 Dummy Loader - Creating Array\n");
+		int arr[6][6] = { 
+			{1,0,0,0,0,1},
+			{0,0,0,0,0,0},
+			{0,0,0,0,0,0},
+			{0,0,0,0,0,0},
+			{0,0,0,0,0,0},
+			{1,0,0,0,0,1}
+		};
+		printf("Party 2 Dummy Loader - Array Created\n");
+		for(int i=0; i < n_nodes; i++){
+			printf("Party 2 Dummy Loader - Allocating Memory for Row\n");
+			dummy[i] = (int *)malloc(sizeof(int) * n_nodes); 
+			for(int j=0; j < n_nodes; j++){
+				printf("Assigning element[%d][%d]\n", i, j);
+				dummy[i][j]=arr[i][j];
+			}
 		}
 	}
 
 	int memsize = ALLOC;
-	for(int i = 0; i < dummy_size; i++){
+	for(int i = 0; i < n_nodes*n_nodes; i++){
 		// Assign the value to the corresponding party
 		if (party == 1) {
 			io->n += 1;
-			*(*x + io->n - 1) =  dummy[i];
+			*(*x + io->n - 1) =  dummy[i%n_nodes][i/n_nodes];
 		}
 		else if (party == 2) {
 			io->n += 1;
-			*(*y + io->n - 1) =  dummy[i];
+			*(*y + io->n - 1) = dummy[i%n_nodes][i/n_nodes];
 		}
-		printf("Party %d element %d = %d\n", party, i, dummy[i]);
+		printf("Party %d element [%d][%d] = %d\n", party, i%n_nodes, i/n_nodes, 
+			dummy[i%n_nodes][i/n_nodes]);
+	}
+	for(int i=0; i < n_nodes; i++){
+		free(dummy[i]);
 	}
 	free(dummy);
 }
+
 
 // void load_data_int(protocolIO *io, int* x, int *y, int party) 
 // {

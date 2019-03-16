@@ -36,16 +36,13 @@ void revealClientArr(protocolIO *io, obliv int *oa, int party){
 }
 
 
-// ------------------ Batcher sorting -----------------------------------------
 
-// TODO time with and without obliv functions. 
-// You can use non-obliv to build obliv versions quite easily
 void batcherSwap(unsigned char* data,size_t n,size_t w,
-                 void (*cmpswap)(void*,void*,void*),void* arg)
-{
+                 void (*cmpswap)(void*,void*,void*),void* arg){
   size_t i;
   for(i=0;i+1<n;i+=2) cmpswap(data+w*i,data+w*(i+1),arg);
 }
+
 void batcherMerge(unsigned char* data,size_t n1,size_t n2,size_t w,
                   void (*cmpswap)(void*,void*,void*),void* arg)
 {

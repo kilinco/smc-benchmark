@@ -1,7 +1,11 @@
-
+#include <limits.h> 
 // initial amount for input data:
 #define ALLOC 64 
 // doubled when needed in load_data()
+
+#define V 6
+#define row(i, n_nodes) (i/n_nodes)
+#define col(j, n_nodes) (j%n_nodes)
 
 double lap;
 int cp;

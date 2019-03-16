@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 		log_info("Total time: %lf seconds\n", runtime);
 		// log_info("Yao Gate Count: %u\n", yaoGateCount());
 		printf("\n");
-		for(int i = 0; i < 36; i++){
+		for(int i = 0; i < V; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
@@ -100,7 +100,7 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 			{0,0,0,0,0,0},
 			{0,0,0,0,0,0},
 			{0,0,0,0,0,0},
-			{0,0,0,0,0,0},
+			{0,0,0,0,0,0}, 
 			{1,0,0,0,0,1}
 		};
 		printf("Party 2 Dummy Loader - Array Created\n");
@@ -119,20 +119,21 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 		// Assign the value to the corresponding party
 		if (party == 1) {
 			io->n += 1;
-			*(*x + io->n - 1) =  dummy[i/n_nodes][i%n_nodes];
+			*(*x + io->n - 1) =  dummy[row(i,n_nodes)][col(i,n_nodes)];
 		}
 		else if (party == 2) {
 			io->n += 1;
-			*(*y + io->n - 1) = dummy[i/n_nodes][i%n_nodes];
+			*(*y + io->n - 1) = dummy[row(i,n_nodes)][col(i,n_nodes)];
 		}
-		printf("Party %d element [%d][%d] = %d\n", party, i/n_nodes, i%n_nodes, 
-			dummy[i/n_nodes][i%n_nodes]);
+		printf("Party %d element [%d][%d] = %d\n", party, row(i,n_nodes), col(i,n_nodes), 
+			dummy[row(i, n_nodes)][col(i,n_nodes)]);
 	}
 	for(int i=0; i < n_nodes; i++){
 		free(dummy[i]);
 	}
 	free(dummy);
 }
+
 
 
 // void load_data_int(protocolIO *io, int* x, int *y, int party) 

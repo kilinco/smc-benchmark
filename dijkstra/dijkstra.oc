@@ -5,42 +5,19 @@
 #include "dijkstra.h"
 #include "dbg.h"
 
-void toOblivFloat(protocolIO *io, obliv float *oa, float *a, int party){
-	for(int i = 0; i < io->n; i++) 
-			oa[i] = feedOblivFloat(a[i], party);
+void revealClientArr(protocolIO *io, obliv int *oa, int party){
+	revealOblivIntArray(io->arr, oa, V, 0);
+	for(int i = 0; i < V; i++)
+		printf("Party %d Element %d revealed as %d\n", ocCurrentParty(), i, io->arr[i]);
 }
 
-void toOblivInt(int size, obliv int *oa, int *a, int party){
-	printf("Party %d called toOblivInt\n", party);
-	printf("Party %d of size %d\n", party, size);
-	for(int i = 0; i < size; i++) {
-		printf("Obliviating element %d\n", i);
-		oa[i] = feedOblivInt(a[i], party);
-	}
-	printf("Exiting toOblivInt\n");
-}
-
-void revealClientArr(int size, int *a, obliv int *oa, int party){
-	printf("Party %d of size %d\n", party, size);
-	for(int i = 0; i < size; i++){
-		revealOblivInt(&(a[i]), oa[i], party);
-		printf("Party %d Element %d revealed as %d\n", party, i, a[i]);
-	}
-}
-
-void minDistance(obliv int dist[], obliv bool visited[], int *min_index){ 
-	obliv int min = INT_MAX;  
-	//for (int v = 0; v < V; v++) 
-		//obliv if (visited[v] == false && dist[v] <= min) 
-			//min = dist[v], min_index = v; 
-} 
-
-// make it dynamic
 void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *dist){
 	bool *visited = (bool *)malloc(sizeof(bool) * V);
-	for(int i = 0; i < V; i ++)	visited[i] = false;
+	for(int i = 0; i < V; i ++) visited[i] = false;
 	obliv int max = INT_MAX;
 	obliv int min = 0;
+	//revealClientArr(io, dist, 0);
+
 	for(int count = 0; count < V; count++){
 		int v;
 		for(v = 0; v < V; v++){
@@ -72,30 +49,26 @@ void dijkstra(void* args){
 	obliv int *oy = malloc(sizeof(obliv int) * io->n);
 	printf("Obliv Data Allocated!\n");
 
-	toOblivInt(io->n, ox, x, 1); 
-	toOblivInt(io->n, oy, y, 2); 
+	feedOblivIntArray(ox, x, io->n, 1);
+	feedOblivIntArray(oy, y, io->n, 2);
 	free(x);
 	free(y);
-	printf("Non-obliv Data Freed!\n");
 
 	printf("Initializing output for party %d!\n", ocCurrentParty());
-	io->arr = malloc(sizeof(int) * 6);
-	obliv int *dist = malloc(sizeof(obliv int) * 6);
+	io->arr = malloc(sizeof(int) * V);
+	obliv int *dist = malloc(sizeof(obliv int) * V);
 	
 	io->arr[0]=0;
-	for(int i = 1; i < 6; i++) io->arr[i] = INT_MAX;
-	toOblivInt(6, dist, io->arr, 1);
-	revealClientArr(6, io->arr, dist, 2);
-
+	for(int i = 1; i < V; i++) io->arr[i] = INT_MAX;
+	feedOblivIntArray(dist, io->arr, V, 1);
 	dijkstra_algo(io, ox, dist);
-
-	printf("Client data revealing...\n");
-	revealClientArr(6, io->arr, dist, 2);
-	revealClientArr(6, io->arr, dist, 1);
+	revealOblivIntArray(io->arr, dist, V, 0);
+	
 	printf("Client Data Revealed!\n");
 	free(ox);
 	free(oy);
 	free(dist);
 	printf("Obliv Data Freed!\n");
+	log_info("Yao Gate Count: %d\n", yaoGateCount());
 }
 

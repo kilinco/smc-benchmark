@@ -6,6 +6,7 @@
 #include <assert.h>
 #include "dbg.h"
 #include<time.h>
+#include "obliv.oh"
 
 #include "../../common/util.h"
 
@@ -51,15 +52,14 @@ int main(int argc, char *argv[])
 		execYaoProtocol(&pd, dijkstra, &io);
 		cleanupProtocol(&pd);
 		double runtime = wallClock() - lap; // stop clock here 
-
-		// Print results and gate count
-		log_info("Total time: %lf seconds\n", runtime);
-		// log_info("Yao Gate Count: %u\n", yaoGateCount());
-		printf("\n");
 		for(int i = 0; i < V; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
+		// Print results and gate count
+		log_info("Total time: %lf seconds\n", runtime);
+		printf("\n");
+
 	} 
 	else {
 		log_info("Usage: %s <hostname:port> <1|2> <filename>\n" 

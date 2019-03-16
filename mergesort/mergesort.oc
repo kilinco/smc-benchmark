@@ -3,39 +3,8 @@
 #include <obliv.oh>
 
 #include "mergesort.h"
+#include "../utils.oh"
 #include "dbg.h"
-
-// FEED FLOAT
-// This function returns an obliv-qualified type from the specified party to both parties. 
-// obliv float feedOblivFloat(float v, int party)
-void toOblivFloat(protocolIO *io, obliv float *oa, float *a, int party){
-	for(int i = 0; i < io->n; i++) {
-		oa[i] = feedOblivFloat(a[i], party);
-	}
-}
-
-// FEED INT
-// This function returns an obliv-qualified type from the specified party to both parties. 
-// obliv int feedOblivInt(int v, int party)
-void toOblivInt(int size, obliv int *oa, int *a, int party){
-	printf("Party %d called toOblivInt\n", party);
-	printf("Party %d of size %d\n", party, size);
-	for(int i = 0; i < size; i++) {
-		printf("Obliviating element %d\n", i);
-		oa[i] = feedOblivInt(a[i], party);
-	}
-	printf("Exiting toOblivInt\n");
-}
-
-void revealClientArr(protocolIO *io, obliv int *oa, int party){
-	printf("Party %d of size %d\n", party, io->n);
-	for(int i = 0; i < io->n; i++){
-		revealOblivInt(&(io->arr[i]), oa[i], 0);
-		printf("Party %d Element %d revealed as %d\n", party, i, io->arr[i]);
-	}
-}
-
-
 
 void batcherSwap(unsigned char* data,size_t n,size_t w,
                  void (*cmpswap)(void*,void*,void*),void* arg){
@@ -44,8 +13,7 @@ void batcherSwap(unsigned char* data,size_t n,size_t w,
 }
 
 void batcherMerge(unsigned char* data,size_t n1,size_t n2,size_t w,
-                  void (*cmpswap)(void*,void*,void*),void* arg)
-{
+                  void (*cmpswap)(void*,void*,void*),void* arg){
   if(n1+n2<=1) return;
   int odd = n1%2;
   batcherMerge(data,(n1+1)/2,(n2+!odd)/2,w*2,cmpswap,arg);
@@ -53,59 +21,23 @@ void batcherMerge(unsigned char* data,size_t n1,size_t n2,size_t w,
   batcherSwap(data+w*!odd,n1+n2-!odd,w,cmpswap,arg);
 }
 
-// w is width in bits
 void batcherSort(void* data, size_t n,size_t w,
-                 void (*cmpswap)(void*,void*,void*),void* arg)
-{
+                 void (*cmpswap)(void*,void*,void*),void* arg){
   if(n<=1) return;
   batcherSort(data,n/2,w,cmpswap,arg);
   batcherSort((unsigned char*)data+w*(n/2),(n+1)/2,w,cmpswap,arg);
   batcherMerge(data,n/2,(n+1)/2,w,cmpswap,arg);
 }
 
-void swapInt(obliv int* a,obliv int* b) obliv{
-  ~obliv(en) {
-	obliv int t = 0;
-	obliv if(en) t=*a^*b;
-	*a^=t;
-	*b^=t;
-  }
-}
-
 void cmpswapInt(void* va,void* vb){
   obliv int *a=va,*b=vb;
-  obliv if(*a>*b)swapInt(a,b);
-}
-
-void merge(protocolIO *io, obliv int *arr, int l, int m, int r){
-	if( l>r ){return;}
-	int i, j, k;
-	int n1 = m - l + 1;
-	printf("MERGE STARTED! l = %d, m= %d, r = %d\n", l,m,r);
-	for(i = l; i < n1; i++){
-		printf("In merge - i = %d\n", i);
-		for(j=m; j<r; j++){
-			cmpswapInt(arr+i, arr+j);
-		}
-		revealClientArr(io, arr, 1);
-	}
+  obliv if(*a>*b) swapInt(a,b);
 }
 
 void mergesort_algo(protocolIO *io, obliv int *out, int party){
 	printf("Party %d Started MergeSort!\n",party);
-	//batcherMerge(out, io->n, io->n, sizeof(*out), cmpswapInt, NULL);
-	batcherSort(out, io->n, sizeof(obliv int), cmpswapInt, NULL);
-	//merge(io, out, l, m, r); 
-}
-
-void concatenate(protocolIO *io, obliv int *ox, obliv int *oy, obliv int **out, int party){
-	printf("Party %d entered Concatenate!\n", party);
-	for(int i = 0; i < io->n; i++){
-		*(*out + i) = ox[i];
-	}
-	for(int i = 0; i < io->n; i++){
-		*(*out + io->n + i) = oy[i];
-	}
+	batcherMerge(out, io->n, io->n, sizeof(*out), cmpswapInt, NULL);
+	//batcherSort(out, io->n, sizeof(obliv int), cmpswapInt, NULL);
 }
 
 void mergesort(void* args) {
@@ -114,38 +46,26 @@ void mergesort(void* args) {
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
 	load_dummy(io, &x, &y, ocCurrentParty());
-
 	printf("Dummy Loaded!\n");
-	obliv int *ox = malloc(sizeof(obliv int) * io->n);
-	obliv int *oy = malloc(sizeof(obliv int) * io->n);
-	printf("Obliv Data Allocated!\n");
-
-	toOblivInt(io->n, ox, x, 1); 
-	toOblivInt(io->n, oy, y, 2); 
+	
+	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);
+	feedOblivIntArray(out, x, io->n, 1);
+	feedOblivIntArray(out+io->n, y, io->n, 2);
 	free(x);
 	free(y);
 	printf("Non-obliv Data Freed!\n");
 	
-	// CONCATENATE -- DOES NOT HAVE TO BE THIS WAY 
-	// concatenation can be done during sorting
-	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);
-	concatenate(io, ox, oy, &out, ocCurrentParty()); 
-	free(ox);
-	free(oy);
-	printf("Party %d Concatenated the Array!\n", ocCurrentParty());
+	mergesort_algo(io, out, ocCurrentParty());
+	printf("Arrays sorted!");
 
-	// io->n CHANGED (=8)
 	io->n =  io->n * 2;
 	io->arr = malloc(sizeof(int) * io->n);
-	mergesort_algo(io, out, ocCurrentParty());
-
-	printf("Arrays sorted!");
 	printf("Client data revealing...\n");
-	revealClientArr(io, out, 1);
-	revealClientArr(io, out, 2);
+	revealOblivIntArray(io->arr, out, io->n, 0);
 	printf("Client Data Revealed!\n");
 
 	free(out);
 	printf("Obliv Data Freed!\n");
+	log_info("Yao Gate Count: %d\n", yaoGateCount()); // - 576
 }
 

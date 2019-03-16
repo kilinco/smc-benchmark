@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
 		log_info("Total time: %lf seconds\n", runtime);
 		// log_info("Yao Gate Count: %u\n", yaoGateCount());
 		printf("\n");
-		for(int i = 0; i < 8; i++){
+		for(int i = 0; i < io.n; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
@@ -73,16 +73,16 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 	printf("Dummy Loading...\n");
 	int *dummy;
 	int dummy_size;
-	dummy_size = 4;
+	dummy_size = 10;
 	dummy = malloc(sizeof(int) * dummy_size); 
 	if(party == 1){
-		int arr[] = {1,13,25,6}; //4,7,8,9,0,3
+		int arr[] = {1,6,13,14,20,25,42,45,46,123,200}; //4,7,8,9,0,3
 		for(int i=0; i < dummy_size; i++){			
 				dummy[i]=arr[i];
 		}
 	}
 	else if (party == 2){
-		int arr[] = {2,48,12,10};
+		int arr[] = {2,10,12,48, 66, 75, 87, 99, 124, 500};
 		for(int i=0; i < dummy_size; i++){			
 				dummy[i]=arr[i];
 		}

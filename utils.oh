@@ -1,0 +1,8 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <obliv.oh>
+
+void revealClientArr(int *arr, obliv int *oa, int size, int party);
+void swapInt(obliv int* a, obliv int* b) obliv;
+void concatenate(obliv int *ox, obliv int *oy, obliv int **out, int size, int party);
+

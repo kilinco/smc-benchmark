@@ -1,0 +1,28 @@
+#include"utils.oh"
+
+void revealClientArr(int *arr, obliv int *oa, int size, int party){
+	revealOblivIntArray(arr, oa, size, 0);
+	for(int i = 0; i < size; i++)
+		printf("Party %d Element %d revealed as %d\n", ocCurrentParty(), i, arr[i]);
+}
+
+void swapInt(obliv int* a,obliv int* b) obliv{
+  ~obliv(en) {
+	obliv int t = 0;
+	obliv if(en) t=*a^*b;
+	*a^=t;
+	*b^=t;
+  }
+}
+
+void concatenate(obliv int *ox, obliv int *oy, obliv int **out, int size, int party){
+	printf("Party %d entered Concatenate!\n", party);
+	for(int i = 0; i < size; i++){
+		*(*out + i) = ox[i];
+	}
+	for(int i = 0; i < size; i++){
+		*(*out + size + i) = oy[i];
+	}
+	free(ox);
+	free(oy);
+}

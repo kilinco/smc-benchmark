@@ -10,8 +10,8 @@ testName=bubblesort
 # TX=tx.dat
 # TY=ty.dat
 
-./a.out: $(testName).oc $(testName).c ../../common/util.c $(RUNTIME)
-	$(OBLIVCC) $(CFLAGS) -I . $(testName).oc $(testName).c ../../common/util.c $(LOADLIBES)
+./a.out: $(testName).oc $(testName).c ../../common/util.c  ../utils.oc $(RUNTIME)
+	$(OBLIVCC) $(CFLAGS) -I . $(testName).oc $(testName).c ../../common/util.c ../utils.oc $(LOADLIBES)
 
 clean:
 	rm -f a.out $(testName).oc.cil.i $(testName).oc.i $(testName).oc.cil.c

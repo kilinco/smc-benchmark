@@ -1,28 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <obliv.oh>
+#include "../utils.oh"
 
 #include "dijkstra.h"
+
 #include "dbg.h"
-
-void revealClientArr(protocolIO *io, obliv int *oa, int party){
-	revealOblivIntArray(io->arr, oa, V, 0);
-	for(int i = 0; i < V; i++)
-		printf("Party %d Element %d revealed as %d\n", ocCurrentParty(), i, io->arr[i]);
-}
-
-void swapInt(obliv int* a,obliv int* b) obliv{
-  ~obliv(en) {
-	obliv int t = 0;
-	obliv if(en) t=*a^*b;
-	*a^=t;
-	*b^=t;
-  }
-}
 
 void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
 	bool *visited = (bool *)malloc(sizeof(bool) * V);
-	obliv int *dist = malloc(sizeof(obliv int) * V);
+	obliv int *dist = (obliv int *) malloc(sizeof(obliv int) * V);
 	visited[0] = false; 
 	dist[0] = 0;
 	parents[0] = -1;
@@ -37,11 +21,10 @@ void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
     
 	for(int count = 0; count < V; count++){
 		int v;
-		for(v = 0; v < V; v++){
-			if(visited[v] == false){ 
+		for(v = 0; v < V; v++)
+			if(visited[v] == false)
 				break;
-			}
-		}
+		
 		visited[v] = true; 
 		for (int i = 0; i < V; i++){
 				obliv if(oa[v*V+i] !=  min)

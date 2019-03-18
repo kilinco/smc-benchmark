@@ -22,7 +22,6 @@ typedef struct_t zdata
 	sint data[ARRAYSIZE];
 }
 
-
 #input 1 gdata
 #output 1 gdata
 #input 2 ddata

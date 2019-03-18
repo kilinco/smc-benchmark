@@ -27,12 +27,12 @@ void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
 		
 		visited[v] = true; 
 		for (int i = 0; i < V; i++){
-				obliv if(oa[v*V+i] !=  min)
-					obliv if(dist[v] != max)
-						obliv if(dist[v] + oa[v*V+i] < dist[i]){ 
-							dist[i] = dist[v] + oa[v*V+i]; 
-                			parents[i] ^= v;
-                }
+			obliv if(oa[v*V+i] !=  min)
+				obliv if(dist[v] != max)
+					obliv if(dist[v] + oa[v*V+i] < dist[i]){ 
+						dist[i] = dist[v] + oa[v*V+i]; 
+						parents[i] ^= v;
+					}
 		}
 	} 
 	free(visited);

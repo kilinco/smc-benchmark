@@ -1,0 +1,35 @@
+#define ARRAYSIZE 6
+#define ENTRYSIZE 4
+#parties 2
+
+typedef int_t ENTRYSIZE*ARRAYSIZE*2 array
+
+typedef int_t ENTRYSIZE int
+
+typedef uint_t ENTRYSIZE sint
+
+typedef struct_t gdata
+{
+	sint data[ARRAYSIZE*ARRAYSIZE];
+}
+
+typedef struct_t ddata{
+	sint start, end;
+}
+
+typedef struct_t zdata
+{	
+	sint data[ARRAYSIZE];
+}
+
+
+#input 1 gdata
+#output 1 gdata
+#input 2 ddata
+#output 2 ddata
+
+function void main()
+{	
+	output1 = input1;	
+	output2.start = input2.start; output2.end = input2.end;	
+}

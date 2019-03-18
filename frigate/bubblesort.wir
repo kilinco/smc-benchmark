@@ -1,0 +1,50 @@
+#define ARRAYSIZE 3
+#define ENTRYSIZE 4
+#parties 2
+
+typedef int_t ENTRYSIZE int
+
+typedef uint_t ENTRYSIZE sint
+
+typedef struct_t mdata
+{
+	int data[ARRAYSIZE];
+}
+
+typedef struct_t zdata
+{
+	int data[ARRAYSIZE*2];
+}
+
+#input 1 mdata
+#output 1 zdata
+#input 2 mdata
+#output 2 zdata
+
+function void main()
+{ 
+    int result[ARRAYSIZE*2];
+    int temp;
+	
+	for(sint i=0; i < ARRAYSIZE; i++)
+	{
+		result[i] = input1.data[i];
+		result[i + ARRAYSIZE] = input2.data[i];
+	}
+
+    for(sint i=0; i < ARRAYSIZE*2; i++)
+    {
+		for(sint j=0; j < ARRAYSIZE*2-1; j++)
+		{
+	    	if (result[i] > result[j])
+	        {
+				temp = result[i]^result[j];
+				result[i] = temp^result[i];
+				result[j] = temp^result[j];
+			}
+		}
+    }
+
+    output1.data = result;
+    output2.data = result;
+}

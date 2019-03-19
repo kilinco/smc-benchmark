@@ -47,7 +47,7 @@ void mergesort(void* args) {
 	int *y = malloc(sizeof(int) * ALLOC);
 	load_dummy(io, &x, &y, ocCurrentParty());
 	printf("Dummy Loaded!\n");
-	
+
 	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);
 	feedOblivIntArray(out, x, io->n, 1);
 	feedOblivIntArray(out+io->n, y, io->n, 2);
@@ -55,22 +55,40 @@ void mergesort(void* args) {
 	free(y);
 	printf("Non-obliv Data Freed!\n");
 
-	int i = 0, j = io->n;
-	for(sint k=0;k<io->n;k++)
+	/*
+
+	obliv int *ox =  malloc(sizeof(obliv int) * io->n);
+	obliv int *oy =  malloc(sizeof(obliv int) * io->n);
+	feedOblivIntArray(ox, x, io->n, 1);
+	feedOblivIntArray(oy, y, io->n, 2);
+	int i = 0, k = 0, j = 0, *change;
+	while(i < io->n)
 	{	
-		obliv int prev_out = out[k]; // save previous state
-		cmpswapInt(out+i, out+j);
-
-	//	obliv int ochange = 0;
-	//	int change = 1;
-	//	obliv if(prev_out ^ out[k] == 0) ochange = 1;
-	//	revealOblivInt(&change, ochange, 0); 
-
-		int change = prev_out ^ out[k];
-		if(change == 0) i++;
-		else j++;
+		obliv int ochange = 1;
+		obliv if(ox[i]<oy[j]) {out[k] = ox[i]; ochange = 0;}
+		else out[k] = oy[j];		
+		k++;
+		revealOblivInt(&change, ochange, 0); 
+		if(change == 0){
+			i++; 
+			printf("Party = %d, change = %d take element from left array!\n", ocCurrentParty(), change);
+		}
+		else{
+			j++;
+			if(j >= io->n) break;
+			printf("Party = %d, change = %d take element from right array!\n", ocCurrentParty(), change);
+		}
 	}
-	
+
+	while(j < io->n){
+		out[k] = oy[j];
+		k++;
+		j++;
+	}
+	free(ox);
+	free(oy);
+	*/
+
 	mergesort_algo(io, out, ocCurrentParty());
 	printf("Arrays sorted!");
 
@@ -81,6 +99,7 @@ void mergesort(void* args) {
 	printf("Client Data Revealed!\n");
 
 	free(out);
+
 	printf("Obliv Data Freed!\n");
 	log_info("Yao Gate Count: %d\n", yaoGateCount()); // - 576
 }

@@ -5,7 +5,7 @@
 #include "dbg.h"
 
 void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
-	bool *visited = (bool *)malloc(sizeof(bool) * V);
+	obliv bool *visited = (obliv bool *)malloc(sizeof(obliv bool) * V);
 	obliv int *dist = (obliv int *) malloc(sizeof(obliv int) * V);
 	visited[0] = false; 
 	dist[0] = 0;
@@ -19,22 +19,23 @@ void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
 	obliv int MAX_DIST = INT_MAX;
 	obliv int NO_CONNECT = 0;
 	obliv int min_idx;
+	int v;
     
 	for(int count = 0; count < V-1; count++){
 		obliv int min_dist = INT_MAX;
 
 		for(int u = 0; u < V; u++)
-			if(visited[u] == false)
+			obliv if(visited[u] == false)
 				obliv if(dist[u] < min_dist){
 					min_idx = u;
 					min_dist = dist[u];
 				}
 		
-		int v = revealOblivInt(min_idx, 0); 
+		revealOblivInt(&v, min_idx, 0); 
 		
 		visited[v] = true; 
 		for (int i = 0; i < V; i++){
-			if(visited[i] == false)
+			obliv if(visited[i] == false)
 				obliv if(oa[v*V+i] !=  NO_CONNECT)
 					obliv if(dist[v] != MAX_DIST)
 						obliv if(dist[v] + oa[v*V+i] < dist[i]){ 

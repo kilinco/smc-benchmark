@@ -54,6 +54,22 @@ void mergesort(void* args) {
 	free(x);
 	free(y);
 	printf("Non-obliv Data Freed!\n");
+
+	int i = 0, j = io->n;
+	for(sint k=0;k<io->n;k++)
+	{	
+		obliv int prev_out = out[k]; // save previous state
+		cmpswapInt(out+i, out+j);
+
+	//	obliv int ochange = 0;
+	//	int change = 1;
+	//	obliv if(prev_out ^ out[k] == 0) ochange = 1;
+	//	revealOblivInt(&change, ochange, 0); 
+
+		int change = prev_out ^ out[k];
+		if(change == 0) i++;
+		else j++;
+	}
 	
 	mergesort_algo(io, out, ocCurrentParty());
 	printf("Arrays sorted!");

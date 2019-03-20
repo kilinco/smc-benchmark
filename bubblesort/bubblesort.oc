@@ -10,7 +10,7 @@ void cmpswapInt(void* va,void* vb)
 // Array sizes has to be equal!!!
 void bubblesort_algo(protocolIO *io, obliv int *out){
 	for(int i = 0; i < io->n; i++) {
-		for(int j = 0; j < io->n-i; j++){
+		for(int j = 0; j < io->n; j++){
 			cmpswapInt(out+j, out+i);
 		}
 	}
@@ -25,7 +25,7 @@ void bubblesort(void* args) {
 
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
-	load_dummy(io, &x, &y, ocCurrentParty());
+	load_data_int(io, &x, &y, ocCurrentParty());
 	printf("Dummy Loaded!\n");
 	
 	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);

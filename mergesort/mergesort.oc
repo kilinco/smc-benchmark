@@ -32,8 +32,8 @@ void cmpswapInt(void* va,void* vb){
 
 void mergesort_algo(protocolIO *io, obliv int *out, int party){
 	printf("Party %d Started MergeSort!\n",party);
-	batcherMerge(out, io->n, io->n, sizeof(*out), cmpswapInt, NULL);
-	//batcherSort(out, io->n, sizeof(obliv int), cmpswapInt, NULL);
+	//batcherMerge(out, io->n, io->n, sizeof(*out), cmpswapInt, NULL);
+	batcherSort(out, io->n*2, sizeof(obliv int), cmpswapInt, NULL);
 }
 
 void mergesort(void* args) {
@@ -41,7 +41,7 @@ void mergesort(void* args) {
 
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
-	load_dummy(io, &x, &y, ocCurrentParty());
+	load_data_int(io, &x, &y, ocCurrentParty());
 	printf("Dummy Loaded!\n");
 	
 	obliv int *out =  malloc(sizeof(obliv int) * io->n * 2);

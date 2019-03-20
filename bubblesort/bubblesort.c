@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	printf("Bubble Sort\n");
 	printf("=================\n\n");
 	// Check args
-	if (argc == 3) {
+	if (argc == 4) {
 		// Initialize protocols and obtain connection information
 		const char *remote_host = strtok(argv[1], ":");
 		const char *port = strtok(NULL, ":");
@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 		cp = (argv[2][0]=='1'? 1 : 2);
 		io.client_id = (argv[2][0]=='1'? 1 : 2);
 		setCurrentParty(&pd, cp); // only checks for a '1'
-		// io.src = argv[3]; // filename
+		io.src = argv[3]; // filename
 		lap = wallClock();
 		io.n = 0;
 

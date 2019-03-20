@@ -7,8 +7,8 @@ CILPATH=../../../../
 CFLAGS=-g -Wall
 LOADLIBES=-lm
 testName=dijkstra
-# TX=tx.dat
-# TY=ty.dat
+TX=tx.dat
+TY=ty.dat
 
 ./a.out: $(testName).oc $(testName).c ../../common/util.c ../utils.c ../utils.oc $(RUNTIME)
 	$(OBLIVCC) $(CFLAGS) -I .  ../utils.c $(testName).oc $(testName).c  ../../common/util.c ../utils.oc $(LOADLIBES)
@@ -19,8 +19,8 @@ clean:
 # Run tests quickly
 t1:
 	$(./a.out)
-	./a.out $(CONNECTION) 1 
+	./a.out $(CONNECTION) 1 $(TX)
 
 t2:
 	$(./a.out) 
-	./a.out $(CONNECTION) 2 
+	./a.out $(CONNECTION) 2 $(TY)

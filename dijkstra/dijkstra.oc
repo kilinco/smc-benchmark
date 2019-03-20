@@ -44,7 +44,7 @@ void dijkstra(void* args){
 
 	int *x = malloc(sizeof(int) * ALLOC);
 	int *y = malloc(sizeof(int) * ALLOC);
-	load_dummy(io, &x, &y, ocCurrentParty());
+	load_data_int(io, &x, &y, ocCurrentParty());
 	printf("Dummy Loaded!\n");
 
 	obliv int *ox = malloc(sizeof(obliv int) * io->n);
@@ -70,6 +70,6 @@ void dijkstra(void* args){
 	free(oy);
 	free(parents);
 	//printf("Obliv Data Freed!\n");
-	//log_info("Yao Gate Count: %d\n", yaoGateCount()); // - 7683
+	log_info("Yao Gate Count: %d\n", yaoGateCount()); // - 7683
 }
 

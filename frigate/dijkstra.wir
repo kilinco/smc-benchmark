@@ -1,8 +1,6 @@
-#define ARRAYSIZE 6
-#define ENTRYSIZE 4
+#define ARRAYSIZE 32
+#define ENTRYSIZE 32
 #parties 2
-
-typedef int_t ENTRYSIZE*ARRAYSIZE*2 array
 
 typedef int_t ENTRYSIZE int
 
@@ -23,12 +21,53 @@ typedef struct_t zdata
 }
 
 #input 1 gdata
-#output 1 gdata
+#output 1 ddata
 #input 2 ddata
-#output 2 ddata
+#output 2 zdata
 
 function void main()
-{	
-	output1 = input1;	
-	output2.start = input2.start; output2.end = input2.end;	
+{
+	int INT_MAX = 15;
+	int dist[ARRAYSIZE];  
+	int sptSet[ARRAYSIZE];
+	int parent[ARRAYSIZE]; 
+	for (sint i = 0; i < ARRAYSIZE; i++) 
+	{ 
+		parent[i] = INT_MAX; 
+		dist[i] = INT_MAX; 
+		sptSet[i] = 0; 
+	}
+	dist[0] = 0;
+	parent[0] = 15;
+	for (sint count = 0; count < ARRAYSIZE-1; count++) 
+	{	 
+		int min = INT_MAX; 
+		for (int u = 0; u < ARRAYSIZE; u++)
+		{ 
+			if(sptSet[u] == 0)
+			{ 
+				if(dist[u] < min)
+				{
+					min = dist[u];
+					sptSet[u] = 1;
+					for(int v = 0; v < ARRAYSIZE; v++)
+					{  
+						if(input1.data[u*ARRAYSIZE+v] > 0)
+						{
+								if(dist[u] + input1.data[u*ARRAYSIZE+v] < dist[v]) 
+								{ 
+									parent[v] = u; 
+									dist[v] = dist[u] + input1.data[u*ARRAYSIZE+v]; 
+								}
+							
+						}
+					}
+						
+				}
+			}
+		}
+	} 
+
+	output1.start = input2.start; output1.end = input2.end;	
+	output2.data = parent;	
 }

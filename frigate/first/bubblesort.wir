@@ -1,5 +1,5 @@
-#define ARRAYSIZE 32
-#define ENTRYSIZE 32
+#define ARRAYSIZE 3
+#define ENTRYSIZE 4
 #parties 2
 
 typedef int_t ENTRYSIZE int

@@ -31,38 +31,41 @@ function void main()
 {
 	int INT_MAX = 15;
 	int dist[ARRAYSIZE];  
-    	int sptSet[ARRAYSIZE];
-    	int parent[ARRAYSIZE]; 
-    	for (sint i = 0; i < ARRAYSIZE; i++) 
-   	{ 
-        	parent[i] = -1; 
-        	dist[i] = INT_MAX; 
-	        sptSet[i] = 0; 
-    	}
-    	dist[0] = 0;
+	int sptSet[ARRAYSIZE];
+	int parent[ARRAYSIZE]; 
+	for (sint i = 0; i < ARRAYSIZE; i++) 
+	{ 
+		parent[i] = -1; 
+		dist[i] = INT_MAX; 
+		sptSet[i] = 0; 
+	}
+	dist[0] = 0;
 	parent[0] = -1;
-   	for (sint count = 0; count < ARRAYSIZE; count++) 
-    	{	 
-    	   int min = INT_MAX; 
-    	   for (sint u = 0; u < ARRAYSIZE; u++)
-           { 
-             if(sptSet[u] == 0){ 
-             if(dist[u] <= min)
-	     {
-	       min = dist[u];
-	       sptSet[u] = 1;
-               for(sint v = 0; v < ARRAYSIZE; v++)  
-		  if(sptSet[v] == 0)
-		  if(input1.data[u*ARRAYSIZE+v] > 0)
-		  if(dist[u] + input1.data[u*ARRAYSIZE+v] < dist[v]) 
-		  { 
-		  parent[v] = u; 
-		  dist[v] = dist[u] + input1.data[u*ARRAYSIZE+v]; 
-		  }  	 
-	      }}
-       	  }
-    	} 
-
+	
+	for (sint count = 0; count < ARRAYSIZE; count++) 
+	{	 
+		int min = INT_MAX; 
+		for (sint u = 0; u < ARRAYSIZE; u++)
+		{ 
+			if(sptSet[u] == 0)
+			{ 
+				if(dist[u] <= min)
+				{
+					min = dist[u];
+					sptSet[u] = 1;
+					for(sint v = 0; v < ARRAYSIZE; v++)  
+						if(sptSet[v] == 0)
+							if(input1.data[u*ARRAYSIZE+v] > 0)
+								if(dist[u] + input1.data[u*ARRAYSIZE+v] < dist[v]) 
+								{ 
+									parent[v] = u; 
+									dist[v] = dist[u] + input1.data[u*ARRAYSIZE+v]; 
+								}  	 
+				}
+			}
+		}
+	} 
+	
 	output2.data = parent;	
 	output1.start = input2.start; output1.end = input2.end;	
 }

@@ -1,4 +1,5 @@
 #include"utils.oh"
+#include"utils.h"
 
 void revealClientArr(int *arr, obliv int *oa, int size, int party){
 	revealOblivIntArray(arr, oa, size, 0);

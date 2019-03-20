@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <obliv.oh>
 
 void revealClientArr(int *arr, obliv int *oa, int size, int party);

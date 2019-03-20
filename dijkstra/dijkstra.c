@@ -1,17 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include <obliv.h>
-#include <string.h>
-#include <math.h>
-#include <assert.h>
-#include "dbg.h"
-#include<time.h>
 #include "obliv.oh"
 
+#include "../utils.h"
 #include "../../common/util.h"
 
-#include "dijkstra.h"
-
+#define row(i, n_nodes) (i/n_nodes)
+#define col(j, n_nodes) (j%n_nodes)
+void dijkstra(void* args);
 
 int main(int argc, char *argv[]) 
 {
@@ -52,7 +47,7 @@ int main(int argc, char *argv[])
 		execYaoProtocol(&pd, dijkstra, &io);
 		cleanupProtocol(&pd);
 		double runtime = wallClock() - lap; // stop clock here 
-		for(int i = 0; i < V; i++){
+		for(int i = 0; i < io.n; i++){
 			printf("%d ", io.arr[i]);
 		}
 		printf("\n");
@@ -76,9 +71,9 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 	if(party == 1){
 		printf("Party 1 Dummy Loader - Creating Array\n");
 		int arr[6][6] = { 
-			{0,3,4,0,0,0},
+			{0,3,1,0,0,0},
 			{3,0,2,0,0,3},
-			{4,2,0,0,1,0},
+			{1,2,0,0,1,0},
 			{0,0,0,0,1,2},
 			{0,0,1,1,0,0},
 			{0,3,0,2,0,0}
@@ -133,115 +128,3 @@ void load_dummy(protocolIO *io, int **x, int **y, int party){
 	}
 	free(dummy);
 }
-
-
-
-// void load_data_int(protocolIO *io, int* x, int *y, int party) 
-// {
-// 	FILE *inputFile = fopen(io->src, "r");
-// 	if (inputFile == NULL) {
-// 		log_err("File '%s' not found\n", io->src);
-// 		clean_errno();
-// 		exit(1); // causes TCP error for non-null party
-// 	}
-  	
-// 	io->n = 0;
-// 	int memsize = ALLOC;
-// 	int a;
-
-// 	while (!feof(inputFile)) {
-// 		int dataPoints = fscanf(inputFile, "%d", &a);
-
-// 		// Input Control
-// 		if (dataPoints != 1) {
-// 			if (dataPoints < 0) {
-// 				if (feof(inputFile)) {
-// 					break;
-// 				} 
-// 				else {
-// 					log_err("Input from '%s' does not match file format. Check input file.\n\t" 
-// 						"File format exception found at Line %d or %d in file.\n", 
-// 						io->src, io->n, io->n + 1); // prints to both parties if filename is same
-// 					clean_errno();
-// 					exit(1);
-// 				}
-// 			} 
-// 			else {
-// 				log_err("Input from '%s' does not match file format. Check input file.\n\t" 
-// 						"File format exception found at Line %d or %d in file.\n", 
-// 						io->src, io->n, io->n + 1); // prints to both parties if filename is same
-// 				clean_errno();
-// 				exit(1);
-// 			}
-// 		}
-
-// 		// Increment the array size
-// 		io->n += 1;
-// 		if (io->n > memsize) {
-// 			memsize *= 2;
-// 			*x = realloc(*x, sizeof(int) * memsize);
-// 			*y = realloc(*y, sizeof(int) * memsize);
-// 			check_mem(*x, *y, party);
-// 		}
-		
-// 		// Assign the value to the corresponding party
-// 		if (party == 1) {
-// 			*(*x + io->n - 1) =  a; // messy, but needed for dereferencing 
-// 		} 
-// 		else if (party == 2) {
-// 			*(*y + io->n - 1) =  a;
-// 		}
-// 	}
-
-// 	log_info("Loading %d data points ...\n", io->n);
-// 	fclose(inputFile);
-// }
-
-///// DIJKSTRA 
-// float kruskal::dijkstra(int node_index){
-// 	float temp_cost, distance_through_node; 
-// 	int index,u,v;
-// 	float infinity_var = numeric_limits<float>::infinity();
-// 	queue <int> node_queue; 
-// 	int *visited = new int [numnode]; 
-// 	float *node_distance = new float[numnode];
-// 	for(int j = 0; j < numnode; j++){
-// 		node_distance[j] = infinity_var;
-// 		visited[j] = -1;
-// 	}
-// 	node_queue.push(node_index);
-// 	node_distance[node_index] = 0;
-// 	visited[node_index] = 1;
-// 	while(!node_queue.empty()){
-// 		index = node_queue.front();
-// 		node_queue.pop();
-// 		for (int j = 0; j < numedges; j++){
-// 			u = myedge[j].row;
-// 			v = myedge[j].column;
-// 			temp_cost = myedge[j].cost;
-// 			distance_through_node = temp_cost + node_distance[index];
-// 			//since myedge is already sorted, there is no need to look for the smallest edge.
-// 			if(index == u && visited[v] == -1){
-// 				visited[v] = 1;
-// 				node_queue.push(v);
-// 				if(distance_through_node < node_distance[v]){
-// 					node_distance[v] = distance_through_node;
-// 				}	
-// 			}
-// 			else if(index == v && visited[u] == -1){
-// 				visited[u] = 1;
-// 				node_queue.push(u);
-// 				if(distance_through_node < node_distance[u]){
-// 					node_distance[u] = distance_through_node;
-// 				}	
-// 			}
-// 		}
-// 	}
-// 	temp_cost = 0;
-// 	for(int j = 0; j < numnode; j++){
-// 		temp_cost = temp_cost + node_distance[j];
-// 	}
-// 	delete [] node_distance; 
-// 	delete [] visited;
-// 	return temp_cost;
-// }

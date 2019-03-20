@@ -1,16 +1,14 @@
 #include "../utils.oh"
-
-#include "dijkstra.h"
-
-#include "dbg.h"
+#include "../utils.h"
+#include <math.h>
 
 void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
-	bool *visited = (bool *)malloc(sizeof(bool) * V);
-	obliv int *dist = (obliv int *) malloc(sizeof(obliv int) * V);
+	obliv bool *visited = (obliv bool *)malloc(sizeof(obliv bool) * io->n);
+	obliv int *dist = (obliv int *) malloc(sizeof(obliv int) * io->n);
 	visited[0] = false; 
 	dist[0] = 0;
 	parents[0] = -1;
-	for(int i = 1; i < V; i++){
+	for(int i = 1; i < io->n; i++){
 		dist[i] = feedOblivInt(INT_MAX, 1);
 		parents[i] = feedOblivInt(0, 1);
 		visited[i] = false; 
@@ -19,20 +17,22 @@ void dijkstra_algo(protocolIO *io, obliv int *oa, obliv int *parents){
 	obliv int max = INT_MAX;
 	obliv int min = 0;
     
-	for(int count = 0; count < V; count++){
+	for(int count = 0; count < io->n-1; count++){
 		int v;
-		for(v = 0; v < V; v++)
-			if(visited[v] == false)
-				break;
-		
-		visited[v] = true; 
-		for (int i = 0; i < V; i++){
-			obliv if(oa[v*V+i] !=  min)
-				obliv if(dist[v] != max)
-					obliv if(dist[v] + oa[v*V+i] < dist[i]){ 
-						dist[i] = dist[v] + oa[v*V+i]; 
-						parents[i] ^= v;
-					}
+		obliv int min_dist = INT_MAX;
+		for(v = 0; v < io->n; v++)
+			obliv if(visited[v] == false)
+				obliv if(min_dist > dist[v])
+				{
+					visited[v] = true; 
+					for (int i = 0; i < io->n; i++){
+						obliv if(oa[v*io->n+i] !=  min)
+							obliv if(dist[v] + oa[v*io->n+i] < dist[i]){ 
+								dist[i] = dist[v] + oa[v*io->n+i];
+								parents[i] = 0; 
+								parents[i] ^= v;
+							}
+				}	
 		}
 	} 
 	free(visited);
@@ -56,13 +56,14 @@ void dijkstra(void* args){
 	free(x);
 	free(y);
 
+	io->n = (int)sqrt(io->n);
 	printf("Initializing output for party %d!\n", ocCurrentParty());
-	obliv int *parents = malloc(sizeof(obliv int) * V);
+	obliv int *parents = malloc(sizeof(obliv int) * io->n);
 	printf("Dijkstra running for party %d!\n", ocCurrentParty());
 	dijkstra_algo(io, ox, parents);
 
-	io->arr = malloc(sizeof(int) * V);
-	revealOblivIntArray(io->arr, parents, V, 0);
+	io->arr = malloc(sizeof(int) * io->n);
+	revealOblivIntArray(io->arr, parents, io->n, 0);
 	
 	//printf("Client Data Revealed!\n");
 	free(ox);

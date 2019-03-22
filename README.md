@@ -31,7 +31,7 @@ Folder contains instructions to compile Frigate, and .wir files to be run in Fri
 ### Obliv-C
 Obliv-C is a gcc wrapper that guarantees secure computation if the underlying protocol is secure. It is more extensible and the language is very similar to C, but includes a new obliv datatype. It is written to be practical and the programmer does not need to be an expert in cryptography. It provides a higher-level programming abstractions, which simplifies the developing process. 
 
-Folder contains .c and .oc files to be run in Obliv-C.
+Folder contains instructions to compile Obliv-C, .c and .oc files to be run in Obliv-C.
 
 ### Data
 generate_input.py can be used to generate input and sample output files for each framework and for each benchmark like so:

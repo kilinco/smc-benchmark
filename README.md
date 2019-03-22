@@ -38,4 +38,4 @@ generate_input.py can be used to generate input and sample output files for each
 ```
 python generate_input.py tinygarble mergesort alice.txt bob.txt 32 1000
 ````
-The code above, for example, generates two text files with random positive integers up to 1000, as well as a tinygarble_trueoutput.txt file that contains the sorted version of the two files.
+The code above, for example, generates two text files with 32 random positive integers up to 1000, as well as a tinygarble_trueoutput.txt file that contains the sorted version of the two files.

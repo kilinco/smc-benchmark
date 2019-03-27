@@ -1,4 +1,4 @@
-# smpc-benchmark
+# smc-benchmark
 ## Introduction to Secure Multiparty Computation
 Secure Multiparty Computation is a field within cryptography that aims to solve a difficult problem; the calculation of a function over several participants’ inputs without revealing any of their inputs to the other participants. While traditional cryptography aims to conceal information from an adversary outside of the system, here we assume the adversary actually controls actual participants. 
 
